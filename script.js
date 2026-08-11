@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definizione dei prezzi
     const prices = {
         plan: {
             basic: { name: 'Basic (Start)', price: 450, type: 'one-time' },
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         extra_ads: {
             nessuno: { name: 'Nessuna campagna', price: 0 },
-            ads500: { name: 'Meta Ads (fino a 500€)', price: 0 }, // Gestione a percentuale
+            ads500: { name: 'Meta Ads (fino a 500€)', price: 0 },
             ads1000: { name: 'Meta Ads (fino a 1.000€)', price: 0 },
             ads2000: { name: 'Meta Ads (fino a 2.000€)', price: 0 },
             ads4000: { name: 'Meta Ads (oltre 4.000€)', price: 0 }
@@ -64,26 +63,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Popola i prezzi nelle card radio del form
-    document.getElementById('price-plan-basic').textContent = `€${prices.plan.basic.price}`;
-    document.getElementById('price-plan-avanzato').textContent = `€${prices.plan.avanzato.price}`;
-    document.getElementById('price-plan-business').textContent = `€${prices.plan.business.price}`;
+    const setElemText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    };
+
+    setElemText('price-plan-basic', `€${prices.plan.basic.price}`);
+    setElemText('price-plan-avanzato', `€${prices.plan.avanzato.price}`);
+    setElemText('price-plan-business', `€${prices.plan.business.price}`);
     
-    document.getElementById('price-dati-base').textContent = `€${prices.sub_dati.base.price}/mese`;
-    document.getElementById('price-dati-avanzato').textContent = `€${prices.sub_dati.avanzato.price}/mese`;
+    setElemText('price-dati-base', `€${prices.sub_dati.base.price}/mese`);
+    setElemText('price-dati-avanzato', `€${prices.sub_dati.avanzato.price}/mese`);
     
-    document.getElementById('price-vetrina-base').textContent = `€${prices.sub_vetrina.base.price}/mese`;
-    document.getElementById('price-vetrina-avanzata').textContent = `€${prices.sub_vetrina.avanzata.price}/mese`;
+    setElemText('price-vetrina-base', `€${prices.sub_vetrina.base.price}/mese`);
+    setElemText('price-vetrina-avanzata', `€${prices.sub_vetrina.avanzata.price}/mese`);
     
-    document.getElementById('price-news-base').textContent = `€${prices.sub_news.base.price}/mese`;
-    document.getElementById('price-news-pro').textContent = `€${prices.sub_news.pro.price}/mese`;
-    document.getElementById('price-news-avanzate').textContent = `€${prices.sub_news.avanzate.price}/mese`;
+    setElemText('price-news-base', `€${prices.sub_news.base.price}/mese`);
+    setElemText('price-news-pro', `€${prices.sub_news.pro.price}/mese`);
+    setElemText('price-news-avanzate', `€${prices.sub_news.avanzate.price}/mese`);
     
-    document.getElementById('price-analytics-si').textContent = `€${prices.extra_analytics.si.price}`;
-    document.getElementById('price-multi-si').textContent = `€${prices.addon_multi.si.price}`;
-    document.getElementById('price-dominio-si').textContent = `€${prices.addon_dominio.si.price}/mese`;
+    setElemText('price-analytics-si', `€${prices.extra_analytics.si.price}`);
+    setElemText('price-multi-si', `€${prices.addon_multi.si.price}`);
+    setElemText('price-dominio-si', `€${prices.addon_dominio.si.price}/mese`);
 
     const form = document.getElementById('webly-configurator');
+    if (!form) return;
 
     function updateSummary() {
         const formData = new FormData(form);
@@ -103,19 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let totaleIniziale = 0;
         let totaleMensile = 0;
 
-        // HTML Riepilogo
         let pianoHtml = '<li>Nessun piano selezionato</li>';
         let abbonamentiHtml = '';
         let extraHtml = '';
 
-        // 1. Piano
         if (pianoKey && prices.plan[pianoKey]) {
             const p = prices.plan[pianoKey];
             totaleIniziale += p.price;
             pianoHtml = `<li><span class="item-name">${p.name}</span><span class="item-cost">€${p.price}</span></li>`;
         }
 
-        // 2. Abbonamenti
         let subCount = 0;
         if (subDatiKey && subDatiKey !== 'nessuno' && prices.sub_dati[subDatiKey]) {
             const s = prices.sub_dati[subDatiKey];
@@ -136,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
             subCount++;
         }
 
-        // Dominio ricorrente se selezionato e non gratuito per abbonamento
         if (addonDominioKey === 'si') {
             totaleMensile += prices.addon_dominio.si.price;
             abbonamentiHtml += `<li><span class="item-name">Dominio personalizzato</span><span class="item-cost">€20/mese</span></li>`;
@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             abbonamentiHtml = '<li>Nessuno</li>';
         }
 
-        // 3. Extra & Add-on (Una tantum)
         let extraCount = 0;
         if (extraFrontKey && extraFrontKey !== 'nessuno' && prices.extra_front[extraFrontKey]) {
             const e = prices.extra_front[extraFrontKey];
@@ -190,29 +189,64 @@ document.addEventListener('DOMContentLoaded', () => {
             extraHtml = '<li>Nessuno</li>';
         }
 
-        // Aggiorna DOM
-        document.getElementById('sum-piano').innerHTML = pianoHtml;
-        document.getElementById('sum-abbonamenti').innerHTML = abbonamentiHtml;
-        document.getElementById('sum-extra').innerHTML = extraHtml;
-        document.getElementById('totale-iniziale').textContent = `€${totaleIniziale}`;
-        document.getElementById('totale-mensile').textContent = `€${totaleMensile}/mese`;
+        const sumPiano = document.getElementById('sum-piano');
+        const sumAbb = document.getElementById('sum-abbonamenti');
+        const sumExt = document.getElementById('sum-extra');
+        const totInit = document.getElementById('totale-iniziale');
+        const totMon = document.getElementById('totale-mensile');
+
+        if (sumPiano) sumPiano.innerHTML = pianoHtml;
+        if (sumAbb) sumAbb.innerHTML = abbonamentiHtml;
+        if (sumExt) sumExt.innerHTML = extraHtml;
+        if (totInit) totInit.textContent = `€${totaleIniziale}`;
+        if (totMon) totMon.textContent = `€${totaleMensile}/mese`;
     }
 
-    // Ascoltatore di eventi su tutto il form per ricalcolare in tempo reale
     form.addEventListener('input', updateSummary);
     form.addEventListener('change', updateSummary);
 
-    // Gestione invio form
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const statusDiv = document.getElementById('form-status');
-        statusDiv.className = 'form-status success';
-        statusDiv.textContent = 'Richiesta inviata con successo! Ti ricontatteremo presto.';
-        statusDiv.classList.remove('hidden');
-        form.reset();
-        updateSummary();
+        const submitBtn = document.getElementById('btn-submit');
+        
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Invio in corso...';
+        }
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch('invia.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                if (statusDiv) {
+                    statusDiv.className = 'form-status success';
+                    statusDiv.textContent = 'Richiesta inviata con successo! Ti ricontatteremo presto.';
+                    statusDiv.classList.remove('hidden');
+                }
+                form.reset();
+                updateSummary();
+            } else {
+                throw new Error('Errore del server');
+            }
+        } catch (error) {
+            if (statusDiv) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = "C'è stato un errore durante l'invio. Riprova più tardi.";
+                statusDiv.classList.remove('hidden');
+            }
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Invia richiesta';
+            }
+        }
     });
 
-    // Inizializzazione al caricamento
     updateSummary();
 });

@@ -661,7 +661,6 @@ header {
   display: grid !important;
   grid-template-columns: repeat(2, 1fr) !important;
   gap: 2rem;
-  width: 200% !important;
   min-width: 100% !important;
 }
 
