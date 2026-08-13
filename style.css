@@ -1,3 +1,74 @@
+.btn-accedi {
+  background-color: transparent;
+  border: 1px solid var(--verde-scuro);
+  color: var(--verde-scuro);
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px; /* Rende il bottone rettangolare */
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-accedi:hover {
+  background-color: var(--verde-scuro);
+  color: var(--bianco-panna);
+}
+
+.user-profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: var(--verde-scuro, #304F10);
+  color: var(--bianco-panna, #E6FFCC);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #ffffff;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(48, 79, 16, 0.15);
+  border-radius: 10px;
+  z-index: 1000;
+  border: 1px solid rgba(48, 79, 16, 0.1);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.dropdown-content button {
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--verde-scuro, #304F10);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.dropdown-content button:hover {
+  background-color: var(--bianco-panna, #E6FFCC);
+}
+
+/* ==========================================================================
+   1. CONFIGURAZIONE E STILI BASE (DESKTOP / DEFAULT)
+   ========================================================================== */
+
 /* Font principale */
 .stack-sans-notch-ink {
   font-family: "Stack Sans Notch", sans-serif;
@@ -15,11 +86,11 @@
 }
 
 :root {
-  --bianco-panna: #E6FFCC; /* */
-  --verde-pastello: #CEFF99; /* */
-  --verde-lime: #A5E85D; /* */
-  --verde-foglia: #448200; /* */
-  --verde-scuro: #304F10; /* */
+  --bianco-panna: #E6FFCC;
+  --verde-pastello: #CEFF99;
+  --verde-lime: #A5E85D;
+  --verde-foglia: #448200;
+  --verde-scuro: #304F10;
 }
 
 * {
@@ -97,13 +168,7 @@ header {
   background-color: var(--verde-foglia);
 }
 
-@media (max-width: 900px) {
-  .nav-links {
-    display: none;
-  }
-}
-
-/* Hero Section - Fluida e Proporzionata */
+/* Hero Section */
 .hero {
   display: flex;
   align-items: center;
@@ -119,7 +184,6 @@ header {
   margin: 0 auto;
 }
 
-/* Tipografia e margini scelgono dinamicamente la dimensione ideale */
 .hero h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   color: var(--verde-scuro);
@@ -172,28 +236,6 @@ header {
   background-color: var(--verde-lime);
 }
 
-/* Breakpoint sotto i 1200px */
-@media (max-width: 1200px) {
-  .hero {
-    padding: 3rem 5%;
-  }
-}
-
-/* Breakpoint per tablet e mobile */
-@media (max-width: 768px) {
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .hero-cta a {
-    width: 100%;
-    max-width: 350px; /* Evita che i bottoni diventino troppo lunghi */
-    text-align: center;
-  }
-}
-
 /* Sezione Chi Sono */
 .about-section {
   padding: clamp(3rem, 6vw, 6rem) 1.5rem;
@@ -211,7 +253,6 @@ header {
   align-items: center;
 }
 
-/* Badge decorativo */
 .badge {
   display: inline-block;
   background-color: var(--verde-pastello);
@@ -239,7 +280,6 @@ header {
   line-height: 1.6;
 }
 
-/* Griglia Schede Grafiche */
 .about-grid {
   display: flex;
   flex-direction: column;
@@ -287,26 +327,6 @@ header {
   line-height: 1.4;
 }
 
-/* Responsività sotto i 900px */
-@media (max-width: 900px) {
-  .about-container {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  .about-content {
-    text-align: center;
-  }
-
-  .badge {
-    margin: 0 auto 1rem auto;
-  }
-
-  .skill-card {
-    text-align: left;
-  }
-}
-
 /* Sezione Piani */
 .plans-section {
   padding: clamp(3rem, 6vw, 6rem) 1.5rem;
@@ -329,7 +349,6 @@ header {
   color: var(--verde-foglia);
 }
 
-/* Griglia Piani */
 .plans-grid {
   max-width: 1100px;
   margin: 0 auto;
@@ -339,7 +358,6 @@ header {
   align-items: start;
 }
 
-/* Card Singola */
 .plan-card {
   background: #ffffff;
   border: 1px solid rgba(48, 79, 16, 0.1);
@@ -385,12 +403,11 @@ header {
   margin-right: 0.5rem;
 }
 
-/* Lista Caratteristiche */
 .plan-features {
   list-style: none;
   text-align: left;
   margin-bottom: 2.5rem;
-  flex-grow: 1; /* Spinge il bottone sempre in basso */
+  flex-grow: 1;
 }
 
 .plan-features li {
@@ -404,7 +421,6 @@ header {
   border-bottom: none;
 }
 
-/* Card Avanzato (Evidenziata) */
 .plan-card.highlighted {
   border: 2px solid var(--verde-scuro);
   box-shadow: 0 10px 30px rgba(48, 79, 16, 0.1);
@@ -429,7 +445,6 @@ header {
   letter-spacing: 1px;
 }
 
-/* Bottoni Consulenza */
 .btn-plan {
   display: block;
   text-decoration: none;
@@ -456,41 +471,6 @@ header {
   background-color: var(--verde-foglia);
 }
 
-/* Responsività */
-@media (max-width: 1024px) {
-  /* Griglia 2x2 per Tablet */
-  .plans-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  /* Centra il terzo piano occupando due colonne (o mettendolo in mezzo) */
-  .plan-card:nth-child(3) {
-    grid-column: 1 / -1;
-    max-width: 500px;
-    margin: 0 auto;
-    width: 100%;
-  }
-  
-  .plan-card.highlighted {
-    transform: scale(1);
-  }
-  .plan-card.highlighted:hover {
-    transform: translateY(-5px);
-  }
-}
-
-@media (max-width: 768px) {
-  /* Griglia uno sopra l'altro per Mobile */
-  .plans-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .plan-card:nth-child(3) {
-    grid-column: auto;
-    max-width: 100%;
-  }
-}
-
 /* Sezione Abbonamenti */
 .subscriptions-section {
   padding: clamp(3rem, 6vw, 6rem) 1.5rem;
@@ -515,10 +495,9 @@ header {
   line-height: 1.5;
 }
 
-/* Categoria */
 .sub-category {
   max-width: 1000px;
-  margin: 0 auto 3.5rem auto;
+  margin: 4rem auto;
 }
 
 .sub-category h3 {
@@ -529,14 +508,12 @@ header {
   border-bottom: 2px solid var(--verde-pastello);
 }
 
-/* Griglia affiancata per PC */
 .sub-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Uno vicino all'altro su PC */
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
-/* Card */
 .sub-card {
   background: #ffffff;
   border: 1px solid rgba(48, 79, 16, 0.1);
@@ -546,12 +523,6 @@ header {
   flex-direction: column;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 15px rgba(48, 79, 16, 0.03);
-}
-
-@media (max-width:"1200px"){
-  .pricing-grid grid-3{
-    padding-left: 2rem;
-  }
 }
 
 .sub-card:hover {
@@ -600,7 +571,6 @@ header {
   border-radius: 50px;
 }
 
-/* Caratteristiche */
 .sub-features {
   list-style: none;
   margin-bottom: 2rem;
@@ -614,7 +584,6 @@ header {
   border-bottom: 1px solid rgba(48, 79, 16, 0.05);
 }
 
-/* Bottoni */
 .btn-sub {
   display: block;
   text-align: center;
@@ -641,55 +610,23 @@ header {
   background-color: var(--verde-foglia);
 }
 
-
-/* Responsività: Tablet e Mobile (uno sopra all'altro) */
-@media (max-width: 1024px) {
-  .sub-grid {
-    grid-template-columns: 1fr; /* Disposizione verticale per tablet e telefoni */
-  }
-}
-
-/* Contenitore sezione */
-.sub-category {
-  width: 100%;
-  max-width: 1200px;
-  margin: 3rem auto;
-}
-
-/* Forza la griglia a occupare tutto lo spazio disponibile */
 .marketing-layout-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  min-width: 100% !important;
 }
 
-/* Forza le singole card a espandersi nelle colonne */
 .marketing-layout-grid .sub-card {
-  width: 200% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  width: 100%;
 }
 
-/* Le prime 2 card affiancate (Top) */
-.marketing-card-top {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Disposizione a 2 colonne per la lista della 3° card */
 .horizontal-features {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem 1.5rem;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
-/* Card inferiore */
 .marketing-card-bottom {
   grid-column: 1 / -1;
   display: flex;
@@ -698,7 +635,6 @@ header {
   width: 100%;
 }
 
-/* Griglia interna per titolo/prezzo e lista */
 .marketing-bottom-content {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -713,7 +649,6 @@ header {
   gap: 0.8rem;
 }
 
-/* Pulsante centrato in basso */
 .btn-bottom-centered {
   align-self: center;
   width: fit-content;
@@ -721,73 +656,30 @@ header {
   margin: 0 auto;
 }
 
-@media (max-width: 900px) {
-  .marketing-bottom-content {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 900px) {
-  .marketing-layout-grid {
-    grid-template-columns: 1fr !important;
-    width: 100% !important;
-  }
-  
-  .marketing-layout-grid .sub-card {
-    width: 100% !important;
-  }
-
-  .marketing-bottom-content {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-/* Struttura base griglie: più aria tra le card e tra le sezioni */
-
-
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 0.8rem;
-}
-
-p {
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  color: var(--verde-foglia);
-  line-height: 1.5;
-}
-
-
 .pricing-grid {
   display: grid;
-  gap: 2rem; /* Più spazio orizzontale tra le card affiancate */
+  gap: 2rem;
   width: 100%;
   align-items: stretch;
-  margin-bottom: 4rem; /* Distanza verticale bella ampia tra i vari blocchi di servizi */
+  margin-bottom: 4rem;
 }
 
-/* Rimuove lo spazio extra sotto l'ultimo blocco */
 .pricing-grid:last-of-type {
   margin-bottom: 0;
 }
 
-/* 1° blocco (Assistenza): Prima card più grande */
 .pricing-grid:nth-of-type(1) {
   grid-template-columns: 1.3fr 1fr;
 }
 
-/* 2° blocco (Analytics): 1 colonna unica */
 .pricing-grid:nth-of-type(2) {
   grid-template-columns: 1fr;
 }
 
-/* 3° blocco (Marketing): Seconda card (Newsletter) più larga */
 .pricing-grid:nth-of-type(3) {
   grid-template-columns: 1fr 1.5fr;
 }
 
-/* 4° blocco (Add-on): 2 colonne sopra, 1 intera sotto */
 .pricing-grid:nth-of-type(4) {
   grid-template-columns: repeat(2, 1fr);
 }
@@ -796,34 +688,21 @@ p {
   grid-column: 1 / -1;
 }
 
-/* Stile Card base: Flexbox per altezza uguale e bottoni allineati in basso */
-.sub-card {
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-sizing: border-box;
-
-}
-
-/* --- NOVITÀ: Spaziature e Dimensioni Maggiorate SOLO per la sezione Extra --- */
 .extras-section .sub-card {
   padding: 2.2rem;
   gap: 1rem;
 }
 
-/* Titoli delle card (es. Add-on, Custom, ecc.) ingranditi nella sezione Extra */
 .extras-section .sub-card h3,
 .extras-section .sub-card .card-title {
-  font-size: 2rem !important;
+  font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
-/* Sottotitoli / etichette (es. Multilingua, Domini, ecc.) ingranditi */
 .extras-section .sub-card h4,
 .extras-section .sub-card strong,
 .extras-section .sub-card .card-subtitle {
-  font-size: 1.4rem !important;
+  font-size: 1.4rem;
 }
 
 .extras-section .sub-card p,
@@ -842,58 +721,7 @@ p {
   margin-bottom: 0;
   border-bottom: none;
 }
-/* --------------------------------------------------------------- */
 
-/* Prezzi normali (nelle altre sezioni) */
-.sub-price {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--verde-scuro);
-  letter-spacing: -1px;
-  margin: 0.5rem 0;
-}
-
-/* Prezzi ingranditi specifici per la sezione Extra (€30, €20, ecc.) */
-.extras-section .sub-price,
-.extras-section .price {
-  font-weight: 800;
-  margin: 0.3rem 0 0.6rem 0;
-}
-
-/* Bottoni */
-.sub-card button,
-.sub-card .btn-sub,
-.sub-card a {
-  margin-top: auto;
-}
-
-.extras-section .sub-card button,
-.extras-section .sub-card .btn-sub,
-.extras-section .sub-card a {
-  padding: 1.1rem;
-}
-
-/* Highlight solo bordo */
-.sub-card.highlighted {
-  border: 2px solid var(--verde-scuro);
-}
-
-/* Responsive per mobile */
-@media (max-width: 900px) {
-  .pricing-grid,
-  .pricing-grid:nth-of-type(1),
-  .pricing-grid:nth-of-type(2),
-  .pricing-grid:nth-of-type(3),
-  .pricing-grid:nth-of-type(4) {
-    grid-template-columns: 1fr;
-  }
-  
-  .pricing-grid:nth-of-type(4) .sub-card:nth-child(3) {
-    grid-column: auto;
-  }
-}
-
-/* Termini e Regole */
 .terms-card-circle {
   display: flex;
   flex-direction: column;
@@ -932,27 +760,6 @@ p {
   max-width: 260px;
 }
 
-.terms-link-text {
-  font-weight: 700;
-  color: var(--verde-scuro);
-  font-size: 0.9rem;
-}
-
-/* Responsive per mobile */
-@media (max-width: 500px) {
-  .terms-card-circle {
-    width: 300px;
-    height: 300px;
-    padding: 2rem;
-  }
-  .terms-card-circle h2 {
-    font-size: 1.3rem;
-  }
-  .terms-card-circle p {
-    font-size: 0.75rem;
-  }
-}
-
 .faq-section {
   max-width: 900px;
   margin: 4rem auto;
@@ -981,7 +788,6 @@ p {
   gap: 1rem;
 }
 
-/* Stile per l'elemento "a comparsa" */
 .faq-item {
   background: #ffffff;
   border-radius: 12px;
@@ -991,13 +797,12 @@ p {
   transition: all 0.3s ease;
 }
 
-/* Rimuove la freccia predefinita e aggiunge il + */
 .faq-question {
   font-size: 1.2rem;
   color: var(--verde-scuro);
   font-weight: 700;
   cursor: pointer;
-  list-style: none; /* Nasconde freccia standard */
+  list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1015,7 +820,6 @@ p {
   transition: transform 0.3s ease;
 }
 
-/* Quando è aperto: trasforma il + in - e aggiunge margine */
 .faq-item[open] .faq-question::after {
   content: '−';
   transform: rotate(180deg);
@@ -1038,25 +842,6 @@ p {
   margin: 0 0 0.8rem 0;
 }
 
-.faq-answer p:last-child {
-  margin-bottom: 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* form di contatto */
-
-/* titolo */
 .cta-intro-section {
   padding: 4rem 1rem 2rem 1rem;
   text-align: center;
@@ -1069,7 +854,7 @@ p {
 
 .cta-intro-container h2 {
   font-size: 2.2rem;
-  color: var(--verde-scuro, #004b3e);
+  color: var(--verde-scuro);
   font-weight: 700;
   margin-bottom: 1rem;
   line-height: 1.2;
@@ -1082,52 +867,22 @@ p {
   margin: 0;
 }
 
-/* Responsiveness Mobile */
-@media (max-width: 768px) {
-  .cta-intro-section {
-    padding: 3rem 1rem 1.5rem 1rem;
-  }
-  
-  .cta-intro-container h2 {
-    font-size: 1.75rem;
-  }
-  
-  .cta-intro-container p {
-    font-size: 1rem;
-  }
-}
-/* fine titolo*/
-
-
-
-
-
-
-
-
-/* ====================================================
-   FORM DI CONFIGURAZIONE WEBLY (Layout Centrato)
-   ==================================================== */
-
 .configurator-section {
-  max-width: 850px; /* Larghezza ideale per colonna singola centrata */
-  margin: 4rem auto;
+  max-width: 850px;
+  margin: auto;
   padding: 0 1rem;
-  font-family: inherit;
 }
 
 .config-container {
   width: 100%;
 }
 
-/* Form principale */
 #webly-configurator {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Singoli step del form */
 .form-step {
   background: #ffffff;
   padding: 2.5rem;
@@ -1145,13 +900,6 @@ p {
   padding-bottom: 0.8rem;
 }
 
-.form-step h4 {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 1.5rem 0 0.8rem 0;
-}
-
-/* Input standard */
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1198,7 +946,6 @@ p {
   background-color: #fff;
 }
 
-/* Radio Cards */
 .radio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1251,7 +998,6 @@ p {
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* Checkboxes */
 .checkboxes-group {
   display: flex;
   flex-direction: column;
@@ -1275,7 +1021,6 @@ p {
   accent-color: var(--verde-scuro);
 }
 
-/* Bottone Invio */
 .btn-submit {
   width: 100%;
   padding: 1.2rem;
@@ -1294,18 +1039,6 @@ p {
   transform: translateY(-2px);
 }
 
-/* Messaggi Status */
-.form-status {
-  padding: 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-align: center;
-}
-.form-status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-.form-status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-.form-status.hidden { display: none; }
-
-/* --- BOX RIEPILOGO SOTTO IL PULSANTE --- */
 .summary-bottom {
   background: var(--verde-scuro);
   color: #fff;
@@ -1375,9 +1108,114 @@ p {
   font-weight: 800;
 }
 
-/* Responsive Mobile */
-@media (max-width: 768px) {
-  .input-grid {
+
+/* ==========================================================================
+   2. TABLET (Schermi medi, max 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .nav-links { 
+    display: none; 
+  }
+  
+  .about-container {
     grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2.5rem;
+  }
+  .badge { 
+    margin: 0 auto 1rem auto; 
+  }
+  .skill-card { 
+    text-align: left; 
+  }
+
+  .plans-grid { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  .plan-card:nth-child(3) {
+    grid-column: 1 / -1;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .plan-card.highlighted { 
+    transform: scale(1); 
+  }
+  .plan-card.highlighted:hover { 
+    transform: translateY(-5px); 
+  }
+
+  .sub-grid, 
+  .pricing-grid, 
+  .pricing-grid:nth-of-type(1), 
+  .pricing-grid:nth-of-type(2), 
+  .pricing-grid:nth-of-type(3), 
+  .pricing-grid:nth-of-type(4),
+  .marketing-layout-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+  
+  .pricing-grid:nth-of-type(4) .sub-card:nth-child(3),
+  .marketing-layout-grid .sub-card { 
+    grid-column: auto;
+    width: 100% !important; 
+  }
+  
+  .marketing-bottom-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
+
+
+/* ==========================================================================
+   3. SMARTPHONE (Schermi piccoli, max 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-cta a {
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+  }
+
+  .plans-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .plan-card:nth-child(3) { 
+    max-width: 100%; 
+  }
+
+  .cta-intro-section { 
+    padding: 3rem 1rem 1.5rem 1rem; 
+  }
+  .cta-intro-container h2 { 
+    font-size: 1.75rem; 
+  }
+  .cta-intro-container p { 
+    font-size: 1rem; 
+  }
+
+  .input-grid, 
+  .horizontal-features { 
+    grid-template-columns: 1fr; 
+  }
+
+  .terms-card-circle {
+    width: 300px;
+    height: 300px;
+    padding: 2rem;
+  }
+  .terms-card-circle h2 { 
+    font-size: 1.3rem; 
+  }
+  .terms-card-circle p { 
+    font-size: 0.75rem; 
+  }
+}
+

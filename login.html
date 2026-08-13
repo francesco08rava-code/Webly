@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesso / Registrazione - Webly</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&family=Stack+Sans+Notch:wght@200..700&display=swap" rel="stylesheet">
+    
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script defer src="login.js"></script>
+</head>
+
+
+<body class="login-body">
+
+  <div class="login-card">
+    <div class="login-header">
+      <h2 id="form-title">Accesso</h2>
+      <p id="form-subtitle">Entra per gestire il tuo spazio</p>
+    </div>
+    
+    <form id="auth-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="login-input" required placeholder="nome@email.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" class="login-input" required placeholder="••••••••">
+          <button type="button" class="toggle-pass" onclick="togglePassword('password', this)">Mostra</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="confirm-group" style="display: none;">
+        <label for="confirm-password">Conferma Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="confirm-password" class="login-input" placeholder="••••••••">
+          <button type="button" class="toggle-pass" onclick="togglePassword('confirm-password', this)">Mostra</button>
+        </div>
+      </div>
+      
+      <button type="submit" class="login-btn" id="submit-btn">Accedi</button>
+    </form>
+    
+    <div class="login-footer">
+      <a href="#" id="toggle-mode" class="login-back-link">Non hai un account? Registrati</a>
+      <br><br>
+      <a href="index.html" class="login-back-link">← Torna alla Home</a>
+    </div>
+
+    <div id="google-section">
+      <div class="login-divider">o</div>
+      <button type="button" class="btn-google" onclick="googleLogin()">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="18"> 
+        Accedi con Google
+      </button>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+  
+</body>
+</html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" translate="no">
     <head>
+    
         <title>Webly</title>
         <meta name="google" content="notranslate">
         <meta charset="utf-8">
@@ -9,9 +10,17 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&family=Stack+Sans+Notch:wght@200..700&display=swap" rel="stylesheet">
+        
+       <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script defer src="script.js"></script>
+
     </head>
+    
+
 
     <body>
+        
         <header>
             <nav class="navbar">
                 <a href="#" class="logo stack-sans-notch-ink">WEBLY</a>
@@ -24,9 +33,12 @@
                     <li><a href="#">Extra</a></li>
                     <li><a href="#">Termini</a></li>
                     <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Contattami</a></li>
                 </ul>
 
-                <a href="#" class="btn-contattami">Contattami</a>
+                <div id="auth-container">
+                    <a href="login.html" class="btn-accedi">Accedi</a>
+                </div>
              </nav>
         </header>
 
@@ -387,6 +399,59 @@
                     <summary class="faq-question">Quanto tempo ci vuole per realizzare il sito?</summary>
                     <div class="faq-answer"><p>In condizioni normali, la realizzazione del sito richiede circa 10–15 giorni lavorativi.</p></div>
                 </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Posso vedere il sito mentre viene sviluppato?</summary>
+                    <div class="faq-answer">
+                        <p>Sì. Durante lo sviluppo il cliente riceverà aggiornamenti sul progetto, inclusi video e report sulle principali modifiche effettuate. In questo modo potrai seguire l'evoluzione del sito durante tutta la realizzazione.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Il dominio e l'hosting sono inclusi?</summary>
+                    <div class="faq-answer">
+                        <p>Sì. Il dominio e l'hosting possono essere forniti da Webly senza costi aggiuntivi quando è attivo almeno un abbonamento mensile, secondo le condizioni del relativo piano.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Che differenza c'è tra front-end e back-end?</summary>
+                    <div class="faq-answer">
+                        <p>Il front-end è la parte del sito che l'utente vede e utilizza: grafica, testi, animazioni, menu e interazioni. Viene sviluppato principalmente attraverso tecnologie come HTML, CSS e JavaScript.</p>
+                        <p>Il back-end è la parte tecnica che opera dietro le quinte. Gestisce, quando necessario, dati, database, autenticazioni, form, API e altre funzionalità del sito. Può essere sviluppato utilizzando tecnologie come PHP, JavaScript/Node.js e altri linguaggi o framework.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Posso modificare il sito autonomamente dopo la consegna?</summary>
+                    <div class="faq-answer">
+                        <p>Sì. Con il piano Avanzato, dedicato ai siti che gestiscono dati e contenuti dinamici, il cliente può ricevere l'accesso al CMS per modificare autonomamente elementi come testi e contenuti, senza dover richiedere ogni volta un intervento extra.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Cos'è un CMS?</summary>
+                    <div class="faq-answer">
+                        <p>Un CMS (Content Management System) è un sistema che permette di gestire e modificare facilmente i contenuti di un sito web senza dover intervenire direttamente sul codice.</p>
+                        <p>Attraverso il CMS è possibile, ad esempio, modificare testi, immagini, articoli, prodotti e altri contenuti del sito in base alle funzionalità disponibili.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Posso interrompere il servizio o l'abbonamento?</summary>
+                    <div class="faq-answer">
+                        <p>Sì. Gli abbonamenti possono essere disdetti con semplicità, secondo le condizioni previste dal relativo piano. Una volta terminato l'abbonamento, verranno applicate le procedure previste per la gestione del sito, del dominio e dell'hosting.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-question">Posso trasferire il sito a un altro sviluppatore?</summary>
+                    <div class="faq-answer">
+                        <p>Sì. In caso di interruzione del servizio, il cliente può richiedere il trasferimento del sito a un altro sviluppatore o servizio.</p>
+                        <p>I file del progetto e, quando previsto, il dominio possono essere trasferiti al cliente o al nuovo professionista incaricato. Gli eventuali servizi e abbonamenti gestiti da Webly verranno disattivati secondo le relative condizioni.</p>
+                        <p>Il trasferimento viene effettuato senza trattenere il cliente obbligatoriamente al servizio Webly, salvo eventuali obblighi contrattuali già concordati.</p>
+                    </div>
+                </details>
                 </div>
         </section>
 
@@ -399,6 +464,7 @@
 
         <section class="configurator-section">
             <div class="config-container">
+                <form id="config-form"></form>
                 <form id="webly-configurator" action="https://api.web3forms.com/submit" method="POST">
                     <input type="hidden" name="access_key" value="43f3daee-ab33-493e-86ba-d3b95a1717d2">
                     
@@ -588,5 +654,40 @@
             </div>
         </section>
         <script src="script.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const authContainer = document.getElementById('auth-container');
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('regEmail') || 'U';
+
+                if (isLoggedIn) {
+                const initial = userEmail.charAt(0).toUpperCase();
+                authContainer.innerHTML = `
+                    <div class="user-profile-menu">
+                    <div class="user-avatar" id="avatar-btn">${initial}</div>
+                    <div class="dropdown-content" id="dropdown-menu">
+                        <button id="logout-btn">Esci</button>
+                    </div>
+                    </div>
+                `;
+
+                document.getElementById('avatar-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const menu = document.getElementById('dropdown-menu');
+                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                document.addEventListener('click', function() {
+                    document.getElementById('dropdown-menu').style.display = 'none';
+                });
+
+                document.getElementById('logout-btn').addEventListener('click', function() {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                });
+                }
+            });
+        </script>
     </body>
 </html>

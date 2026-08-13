@@ -1,3 +1,19 @@
+// Configurazione Firebase (da mettere IN CIMA a script.js)
+const firebaseConfig = {
+  apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+  authDomain: "login-9bace.firebaseapp.com",
+  projectId: "login-9bace",
+  storageBucket: "login-9bace.firebasestorage.app",
+  messagingSenderId: "750647370002",
+  appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+  measurementId: "G-4CV1N6JHWY"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const auth = firebase.auth();
+
 document.addEventListener('DOMContentLoaded', () => {
     const prices = {
         plan: {
@@ -209,8 +225,20 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const statusDiv = document.getElementById('form-status');
+
+        // Controllo Login forzato
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            if (statusDiv) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = 'Devi effettuare il login per poter inviare il form.';
+                statusDiv.classList.remove('hidden');
+            } else {
+                alert('Devi effettuare il login per poter inviare il form.');
+            }
+            return; // Blocca l'invio qui!
+        }
+
         const submitBtn = document.getElementById('btn-submit');
-        
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Invio in corso...';
@@ -218,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const formData = new FormData(form);
-            const response = await fetch('invia.php', {
+            const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 body: formData
             });
