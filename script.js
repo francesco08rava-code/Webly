@@ -1,4 +1,3 @@
-// Configurazione Firebase (da mettere IN CIMA a script.js)
 const firebaseConfig = {
   apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
   authDomain: "login-9bace.firebaseapp.com",
@@ -9,10 +8,9 @@ const firebaseConfig = {
   measurementId: "G-4CV1N6JHWY"
 };
 
-if (!firebase.apps.length) {
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-const auth = firebase.auth();
 
 document.addEventListener('DOMContentLoaded', () => {
     const prices = {
