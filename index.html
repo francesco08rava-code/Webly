@@ -675,7 +675,7 @@
        
         <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const signupForm = document.getElementById('signup-form'); // Assicurati che il form abbia id="signup-form"
+        const signupForm = document.getElementById('signup-form');
 
         if (signupForm) {
             signupForm.addEventListener('submit', function(e) {
@@ -692,10 +692,15 @@
 
                 firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then((userCredential) => {
-                        // Invio dell'email di verifica
-                        userCredential.user.sendEmailVerification().then(() => {
+                        const user = userCredential.user;
+                        
+                        // Invia l'email di verifica
+                        user.sendEmailVerification().then(() => {
+                            // Disconnette subito l'utente così non può accedere finché non verifica l'email
+                            firebase.auth().signOut();
+
                             if (errorDiv) {
-                                errorDiv.style.color = "green"; // Messaggio di successo in verde
+                                errorDiv.style.color = "green";
                                 errorDiv.innerText = "Email di conferma creata e inviata! Controlla la tua casella di posta.";
                                 errorDiv.style.display = 'block';
                             }
@@ -703,7 +708,7 @@
                     })
                     .catch((error) => {
                         if (errorDiv) {
-                            errorDiv.style.color = "red"; // Errori in rosso
+                            errorDiv.style.color = "red";
                             if (error.code === 'auth/email-already-in-use') {
                                 errorDiv.innerText = "Questa email è già registrata.";
                             } else if (error.code === 'auth/weak-password') {
