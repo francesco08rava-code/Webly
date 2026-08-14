@@ -676,37 +676,37 @@
         <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-        <script>
-            const firebaseConfig = {
-                apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
-                authDomain: "login-9bace.firebaseapp.com",
-                projectId: "login-9bace",
-                storageBucket: "login-9bace.firebasestorage.app",
-                messagingSenderId: "750647370002",
-                appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
-                measurementId: "G-4CV1N6JHWY"
-            };
-            
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+            authDomain: "login-9bace.firebaseapp.com",
+            projectId: "login-9bace",
+            storageBucket: "login-9bace.firebasestorage.app",
+            messagingSenderId: "750647370002",
+            appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+            measurementId: "G-4CV1N6JHWY"
+        };
+        
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-            // PROTEZIONE: Se l'utente non è loggato o non verificato, caccialo.
-            firebase.auth().onAuthStateChanged((user) => {
-                if (!user || !user.emailVerified) {
-                    window.location.href = 'login.html'; // Assicurati che questo sia il nome esatto del tuo file di login
-                }
-            });
+        // PROTEZIONE: Se l'utente non è loggato o non verificato, caccialo.
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user || !user.emailVerified) {
+                window.location.href = 'login.html'; // Assicurati che questo sia il nome esatto del tuo file di login
+            }
+        });
 
-            // LOGOUT
-            document.addEventListener('DOMContentLoaded', function() {
-                const logoutBtn = document.getElementById('logout-btn');
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', () => {
-                        firebase.auth().signOut().then(() => {
-                            window.location.href = 'login.html';
-                        });
+        // LOGOUT
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    firebase.auth().signOut().then(() => {
+                        window.location.href = 'login.html';
                     });
-                }
-            });
-        </script>
+                });
+            }
+        });
+    </script>
     </body>
 </html>
