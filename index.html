@@ -673,10 +673,24 @@
         </section>
         <script src="script.js"></script>
        
-        <script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+    // Configurazione Firebase (sostituisci con i tuoi dati)
+    const firebaseConfig = {
+        apiKey: "TUA_API_KEY",
+        authDomain: "TUO_PROGETTO.firebaseapp.com",
+        projectId: "TUO_PROJECT_ID",
+        storageBucket: "TUO_PROGETTO.appspot.com",
+        messagingSenderId: "TUO_SENDER_ID",
+        appId: "TUO_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+
     document.addEventListener('DOMContentLoaded', function() {
         
-        // --- 1. REGISTRAZIONE ---
+        // 1. REGISTRAZIONE
         const signupForm = document.getElementById('signup-form');
         if (signupForm) {
             signupForm.addEventListener('submit', function(e) {
@@ -684,7 +698,7 @@
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const errorDiv = document.getElementById('error-msg');
-                if (errorDiv) { errorDiv.style.display = 'none'; }
+                if (errorDiv) errorDiv.style.display = 'none';
 
                 firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then((userCredential) => {
@@ -692,7 +706,7 @@
                             firebase.auth().signOut(); // Blocca l'accesso immediato
                             if (errorDiv) {
                                 errorDiv.style.color = "green";
-                                errorDiv.innerText = "Registrazione riuscita! Controlla la tua email per la verifica.";
+                                errorDiv.innerText = "Registrazione riuscita! Controlla la tua email per verificare l'account.";
                                 errorDiv.style.display = 'block';
                             }
                         });
@@ -709,7 +723,7 @@
             });
         }
 
-        // --- 2. LOGIN CON BLOCCO VERIFICA ---
+        // 2. LOGIN CON BLOCCO VERIFICA
         const loginForm = document.getElementById('login-form');
         if (loginForm) {
             loginForm.addEventListener('submit', function(e) {
@@ -717,13 +731,13 @@
                 const email = document.getElementById('login-email').value;
                 const password = document.getElementById('login-password').value;
                 const errorDiv = document.getElementById('login-error-msg');
-                if (errorDiv) { errorDiv.style.display = 'none'; }
+                if (errorDiv) errorDiv.style.display = 'none';
 
                 firebase.auth().signInWithEmailAndPassword(email, password)
                     .then((userCredential) => {
                         const user = userCredential.user;
                         if (!user.emailVerified) {
-                            firebase.auth().signOut(); // Respinge l'utente se non ha verificato l'email
+                            firebase.auth().signOut(); // Respinge l'utente se l'email non è verificata
                             if (errorDiv) {
                                 errorDiv.style.color = "red";
                                 errorDiv.innerText = "Accesso negato: devi prima verificare la tua email.";
