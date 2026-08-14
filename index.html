@@ -672,51 +672,56 @@
             </div>
         </section>
         <script src="script.js"></script>
+<script>
+    window.addEventListener('load', function() {
+        const authContainer = document.getElementById('auth-container');
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const userEmail = localStorage.getItem('userEmail') || 'U';
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const authContainer = document.getElementById('auth-container');
-                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('regEmail') || 'U';
+        if (isLoggedIn && authContainer) {
+            const initial = userEmail.charAt(0).toUpperCase();
+            authContainer.innerHTML = `
+                <div class="user-profile-menu">
+                    <div class="user-avatar" id="avatar-btn">${initial}</div>
+                    <div class="dropdown-content" id="dropdown-menu">
+                        <button id="logout-btn">Esci</button>
+                    </div>
+                </div>
+            `;
 
-                if (isLoggedIn) {
-                    const initial = userEmail.charAt(0).toUpperCase();
-                    authContainer.innerHTML = `
-                        <div class="user-profile-menu">
-                            <div class="user-avatar" id="avatar-btn">${initial}</div>
-                            <div class="dropdown-content" id="dropdown-menu">
-                                <button id="logout-btn">Esci</button>
-                            </div>
-                        </div>
-                    `;
+            const avatarBtn = document.getElementById('avatar-btn');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            const logoutBtn = document.getElementById('logout-btn');
 
-                    document.getElementById('avatar-btn').addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const menu = document.getElementById('dropdown-menu');
-                        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                    });
+            if (avatarBtn && dropdownMenu) {
+                avatarBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+            }
 
-                    document.addEventListener('click', function() {
-                        const menu = document.getElementById('dropdown-menu');
-                        if (menu) menu.style.display = 'none';
-                    });
+            document.addEventListener('click', function() {
+                if (dropdownMenu) dropdownMenu.style.display = 'none';
+            });
 
-                    document.getElementById('logout-btn').addEventListener('click', function() {
-                        if (typeof firebase !== 'undefined' && firebase.auth) {
-                            firebase.auth().signOut().then(() => {
-                                localStorage.clear();
-                                window.location.href = 'login.html';
-                            }).catch(() => {
-                                localStorage.clear();
-                                window.location.href = 'login.html';
-                            });
-                        } else {
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (typeof firebase !== 'undefined' && firebase.auth) {
+                        firebase.auth().signOut().then(() => {
                             localStorage.clear();
                             window.location.href = 'login.html';
-                        }
-                    });
-                }
-            });
-        </script>
+                        }).catch(() => {
+                            localStorage.clear();
+                            window.location.href = 'login.html';
+                        });
+                    } else {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+        }
+    });
+</script>
     </body>
 </html>
