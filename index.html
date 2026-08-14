@@ -672,65 +672,97 @@
             </div>
         </section>
         <script src="script.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const firebaseConfig = {
-            apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
-            authDomain: "login-9bace.firebaseapp.com",
-            projectId: "login-9bace",
-            storageBucket: "login-9bace.firebasestorage.app",
-            messagingSenderId: "750647370002",
-            appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
-            measurementId: "G-4CV1N6JHWY"
-        };
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+                    authDomain: "login-9bace.firebaseapp.com",
+                    projectId: "login-9bace",
+                    storageBucket: "login-9bace.firebasestorage.app",
+                    messagingSenderId: "750647370002",
+                    appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+                    measurementId: "G-4CV1N6JHWY"
+                };
 
-        // Inizializzazione Firebase
-        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+                // Inizializzazione Firebase
+                if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
 
-        const authContainer = document.getElementById('auth-container');
+                const authContainer = document.getElementById('auth-container');
 
-        // Verifica reale dello stato di autenticazione via Firebase
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user && authContainer) {
-                    const initial = (user.email || 'U').charAt(0).toUpperCase();
-                    authContainer.innerHTML = `
-                        <div class="user-profile-menu">
-                            <div class="user-avatar" id="avatar-btn">${initial}</div>
-                            <div class="dropdown-content" id="dropdown-menu">
-                                <button id="logout-btn">Esci</button>
-                            </div>
-                        </div>
-                    `;
+                // Verifica reale dello stato di autenticazione via Firebase
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().onAuthStateChanged((user) => {
+                        if (user && authContainer) {
+                            const initial = (user.email || 'U').charAt(0).toUpperCase();
+                            authContainer.innerHTML = `
+                                <div class="user-profile-menu">
+                                    <div class="user-avatar" id="avatar-btn">${initial}</div>
+                                    <div class="dropdown-content" id="dropdown-menu">
+                                        <button id="logout-btn">Esci</button>
+                                    </div>
+                                </div>
+                            `;
 
-                    const avatarBtn = document.getElementById('avatar-btn');
-                    const dropdownMenu = document.getElementById('dropdown-menu');
-                    const logoutBtn = document.getElementById('logout-btn');
+                            const avatarBtn = document.getElementById('avatar-btn');
+                            const dropdownMenu = document.getElementById('dropdown-menu');
+                            const logoutBtn = document.getElementById('logout-btn');
 
-                    avatarBtn?.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                            avatarBtn?.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                            });
+
+                            document.addEventListener('click', () => {
+                                if (dropdownMenu) dropdownMenu.style.display = 'none';
+                            });
+
+                            logoutBtn?.addEventListener('click', () => {
+                                firebase.auth().signOut().then(() => {
+                                    localStorage.removeItem('isLoggedIn');
+                                    localStorage.removeItem('userEmail');
+                                    window.location.href = 'login.html';
+                                });
+                            });
+                        } else if (authContainer) {
+                            authContainer.innerHTML = `<a href="login.html" class="btn-accedi">Accedi</a>`;
+                        }
                     });
-
-                    document.addEventListener('click', () => {
-                        if (dropdownMenu) dropdownMenu.style.display = 'none';
-                    });
-
-                    logoutBtn?.addEventListener('click', () => {
-                        firebase.auth().signOut().then(() => {
-                            localStorage.removeItem('isLoggedIn');
-                            localStorage.removeItem('userEmail');
-                            window.location.href = 'login.html';
-                        });
-                    });
-                } else if (authContainer) {
-                    authContainer.innerHTML = `<a href="login.html" class="btn-accedi">Accedi</a>`;
                 }
             });
-        }
-    });
-</script>
+
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error-msg');
+
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.innerText = '';
+    }
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Successo: reindirizzamento
+            window.location.href = 'index.html';
+        })
+        .catch((error) => {
+            // === QUI C'È IL BLOCCO .CATCH() ===
+            if (errorDiv) {
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorDiv.innerText = "Email o password errata, assicurati che l'email sia stata registrata.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorDiv.innerText = "L'indirizzo email non è valido.";
+                } else {
+                    errorDiv.innerText = "Si è verificato un errore durante l'accesso. Riprova.";
+                }
+                errorDiv.style.display = 'block';
+            }
+        });
+});
+        </script>
     </body>
 </html>
