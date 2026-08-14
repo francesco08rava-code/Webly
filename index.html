@@ -674,7 +674,6 @@
         <script src="script.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Inizializza Firebase ANCHE in index.html (dopo che i file defer sono caricati)
         const firebaseConfig = {
             apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
             authDomain: "login-9bace.firebaseapp.com",
@@ -689,7 +688,6 @@
             firebase.initializeApp(firebaseConfig);
         }
 
-        // 2. Gestione UI Profilo e Logout
         const authContainer = document.getElementById('auth-container');
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const userEmail = localStorage.getItem('userEmail') || 'U';
@@ -722,13 +720,11 @@
 
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
-                    // Firebase ora è configurato correttamente su questa pagina
                     if (typeof firebase !== 'undefined' && firebase.auth) {
                         firebase.auth().signOut().then(() => {
                             localStorage.clear();
                             window.location.href = 'login.html';
-                        }).catch((error) => {
-                            console.error("Errore Logout:", error);
+                        }).catch(() => {
                             localStorage.clear();
                             window.location.href = 'login.html';
                         });
