@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmGroup = document.getElementById('confirm-group');
   const confirmPassword = document.getElementById('confirm-password');
 
+  // Gestione cambio tra Accesso e Registrazione
   if (toggleBtn) {
     toggleBtn.addEventListener('click', function(e) {
       e.preventDefault();
@@ -31,51 +32,49 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (isRegistering) {
         if (formTitle) formTitle.textContent = 'Registrazione';
-        if (formSubtitle) formSubtitle.textContent = 'Crea un nuovo account';
+        if (formSubtitle) formSubtitle.textContent = 'Crea il tuo nuovo account';
         if (submitBtn) submitBtn.textContent = 'Registrati';
         toggleBtn.textContent = 'Hai già un account? Accedi';
-        if (googleSection) googleSection.style.display = 'none';
         if (confirmGroup) confirmGroup.style.display = 'block';
         if (confirmPassword) confirmPassword.setAttribute('required', 'true');
+        if (googleSection) googleSection.style.display = 'none';
       } else {
         if (formTitle) formTitle.textContent = 'Accesso';
         if (formSubtitle) formSubtitle.textContent = 'Entra per gestire il tuo spazio';
         if (submitBtn) submitBtn.textContent = 'Accedi';
-        toggleBtn.textContent = 'Non hai un account? Registrati';
-        if (googleSection) googleSection.style.display = 'block';
+        toggleBtn.textContent = "Non hai un account? Registrati";
         if (confirmGroup) confirmGroup.style.display = 'none';
         if (confirmPassword) confirmPassword.removeAttribute('required');
+        if (googleSection) googleSection.style.display = 'block';
       }
     });
   }
 
+  // Invio Form (Login o Registrazione manuale via Firebase)
   if (authForm) {
-    authForm.addEventListener('submit', function(e) {
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email')?.value;
-      const password = document.getElementById('password')?.value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-      if (isRegistering) {
-        if (confirmPassword && password !== confirmPassword.value) {
-          alert('Le password non coincidono.');
-          return;
+      try {
+        if (isRegistering) {
+          const confirmVal = confirmPassword ? confirmPassword.value : '';
+          if (password !== confirmVal) {
+            alert('Le password non coincidono.');
+            return;
+          }
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
+          alert('Registrazione completata con successo! Ora puoi effettuare il login.');
+          if (toggleBtn) toggleBtn.click(); // Ritorna alla schermata di accesso
+        } else {
+          const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('userEmail', userCredential.user.email);
+          window.location.href = 'index.html';
         }
-        localStorage.setItem('regEmail', email);
-        localStorage.setItem('regPassword', password);
-        alert('Registrazione completata! Ora puoi effettuare il login.');
-        if (toggleBtn) toggleBtn.click();
-      } else {
-        const savedEmail = localStorage.getItem('regEmail');
-        const savedPassword = localStorage.getItem('regPassword');
-
-        if (savedEmail && (email !== savedEmail || password !== savedPassword)) {
-          alert('Email o password errati.');
-          return;
-        }
-
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', email);
-        window.location.href = 'index.html';
+      } catch (error) {
+        alert('Errore: ' + error.message);
       }
     });
   }
@@ -93,6 +92,7 @@ function togglePassword(fieldId, btn) {
   }
 }
 
+// Accesso rapido con Google
 function googleLogin() {
   if (typeof firebase !== 'undefined' && firebase.auth) {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -104,10 +104,7 @@ function googleLogin() {
       })
       .catch((error) => {
         console.error("Errore Google Login:", error);
+        alert('Errore Google Login: ' + error.message);
       });
-  } else {
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userEmail', 'google.user@gmail.com');
-    window.location.href = 'index.html';
   }
 }

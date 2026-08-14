@@ -170,8 +170,8 @@
                     </div>
                     <div class="sub-card highlighted">
                         <span class="sub-tag">Avanzato</span>
-                        <div class="sub-price">€400 <span>/mese</span></div>
-                        <div class="sub-annual">€4.000/anno <span class="badge-discount">risparmi €800</span></div>
+                        <div class="sub-price">€350 <span>/mese</span></div>
+                        <div class="sub-annual">€3.500/anno <span class="badge-discount">risparmi €700</span></div>
                         <ul class="sub-features">
                             <li><strong>Tutto del piano Base, più:</strong></li>
                             <li>Sicurezza avanzata</li>
@@ -181,6 +181,22 @@
                             <li>Ottimizzazione backend</li>
                             <li>Controllo integrazioni</li>
                             <li>Assistenza prioritaria</li>
+                        </ul>
+                        <a href="#" class="btn-sub btn-sub-highlight">Seleziona Piano</a>
+                    </div>
+                    <div class="sub-card marketing-card-bottom">
+                        <span class="sub-tag">Avanzato</span>
+                        <div class="sub-price">€150 <span>/mese</span></div>
+                        <ul class="sub-features horizontal-features">
+                            <li><strong>Tutto del piano Base, più:</strong></li>
+                            <li>Sicurezza avanzata</li>
+                            <li>Ottimizzazione performance</li>
+                            <li>Controllo database/API</li>
+                            <li>Monitoraggio avanzato</li>
+                            <li>Ottimizzazione backend</li>
+                            <li>Controllo integrazioni</li>
+                            <li>Assistenza prioritaria</li>
+                            <li>+1€ per ogni prenotazione (addebitato a fine mese) </li>
                         </ul>
                         <a href="#" class="btn-sub btn-sub-highlight">Seleziona Piano</a>
                     </div>
@@ -664,30 +680,41 @@
                 const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('regEmail') || 'U';
 
                 if (isLoggedIn) {
-                const initial = userEmail.charAt(0).toUpperCase();
-                authContainer.innerHTML = `
-                    <div class="user-profile-menu">
-                    <div class="user-avatar" id="avatar-btn">${initial}</div>
-                    <div class="dropdown-content" id="dropdown-menu">
-                        <button id="logout-btn">Esci</button>
-                    </div>
-                    </div>
-                `;
+                    const initial = userEmail.charAt(0).toUpperCase();
+                    authContainer.innerHTML = `
+                        <div class="user-profile-menu">
+                            <div class="user-avatar" id="avatar-btn">${initial}</div>
+                            <div class="dropdown-content" id="dropdown-menu">
+                                <button id="logout-btn">Esci</button>
+                            </div>
+                        </div>
+                    `;
 
-                document.getElementById('avatar-btn').addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const menu = document.getElementById('dropdown-menu');
-                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                });
+                    document.getElementById('avatar-btn').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const menu = document.getElementById('dropdown-menu');
+                        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                    });
 
-                document.addEventListener('click', function() {
-                    document.getElementById('dropdown-menu').style.display = 'none';
-                });
+                    document.addEventListener('click', function() {
+                        const menu = document.getElementById('dropdown-menu');
+                        if (menu) menu.style.display = 'none';
+                    });
 
-                document.getElementById('logout-btn').addEventListener('click', function() {
-                    localStorage.clear();
-                    window.location.href = 'login.html';
-                });
+                    document.getElementById('logout-btn').addEventListener('click', function() {
+                        if (typeof firebase !== 'undefined' && firebase.auth) {
+                            firebase.auth().signOut().then(() => {
+                                localStorage.clear();
+                                window.location.href = 'login.html';
+                            }).catch(() => {
+                                localStorage.clear();
+                                window.location.href = 'login.html';
+                            });
+                        } else {
+                            localStorage.clear();
+                            window.location.href = 'login.html';
+                        }
+                    });
                 }
             });
         </script>
