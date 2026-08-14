@@ -684,60 +684,51 @@
             measurementId: "G-4CV1N6JHWY"
         };
 
-        // Inizializza Firebase in sicurezza se non è già presente
+        // Inizializzazione Firebase
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
 
         const authContainer = document.getElementById('auth-container');
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('regEmail') || 'U';
 
-        if (isLoggedIn && authContainer) {
-            const initial = userEmail.charAt(0).toUpperCase();
-            authContainer.innerHTML = `
-                <div class="user-profile-menu">
-                    <div class="user-avatar" id="avatar-btn">${initial}</div>
-                    <div class="dropdown-content" id="dropdown-menu">
-                        <button id="logout-btn">Esci</button>
-                    </div>
-                </div>
-            `;
+        // Verifica reale dello stato di autenticazione via Firebase
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user && authContainer) {
+                    const initial = (user.email || 'U').charAt(0).toUpperCase();
+                    authContainer.innerHTML = `
+                        <div class="user-profile-menu">
+                            <div class="user-avatar" id="avatar-btn">${initial}</div>
+                            <div class="dropdown-content" id="dropdown-menu">
+                                <button id="logout-btn">Esci</button>
+                            </div>
+                        </div>
+                    `;
 
-            const avatarBtn = document.getElementById('avatar-btn');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            const logoutBtn = document.getElementById('logout-btn');
+                    const avatarBtn = document.getElementById('avatar-btn');
+                    const dropdownMenu = document.getElementById('dropdown-menu');
+                    const logoutBtn = document.getElementById('logout-btn');
 
-            if (avatarBtn && dropdownMenu) {
-                avatarBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-                });
-            }
+                    avatarBtn?.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                    });
 
-            document.addEventListener('click', function() {
-                if (dropdownMenu) {
-                    dropdownMenu.style.display = 'none';
-                }
-            });
+                    document.addEventListener('click', () => {
+                        if (dropdownMenu) dropdownMenu.style.display = 'none';
+                    });
 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function() {
-                    if (typeof firebase !== 'undefined' && firebase.auth) {
+                    logoutBtn?.addEventListener('click', () => {
                         firebase.auth().signOut().then(() => {
-                            localStorage.clear();
-                            window.location.href = 'login.html';
-                        }).catch((error) => {
-                            console.error("Errore durante il logout:", error);
-                            localStorage.clear();
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('userEmail');
                             window.location.href = 'login.html';
                         });
-                    } else {
-                        localStorage.clear();
-                        window.location.href = 'login.html';
-                    }
-                });
-            }
+                    });
+                } else if (authContainer) {
+                    authContainer.innerHTML = `<a href="login.html" class="btn-accedi">Accedi</a>`;
+                }
+            });
         }
     });
 </script>
