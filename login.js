@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmGroup = document.getElementById('confirm-group');
   const confirmPassword = document.getElementById('confirm-password');
 
-  // Gestione cambio tra Accesso e Registrazione
   if (toggleBtn) {
     toggleBtn.addEventListener('click', function(e) {
       e.preventDefault();
@@ -50,11 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Invio Form (Login o Registrazione manuale via Firebase)
   if (authForm) {
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
@@ -64,17 +62,27 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Le password non coincidono.');
             return;
           }
-          await firebase.auth().createUserWithEmailAndPassword(email, password);
-          alert('Registrazione completata con successo! Ora puoi effettuare il login.');
-          if (toggleBtn) toggleBtn.click(); // Ritorna alla schermata di accesso
+          const userCred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+          await userCred.user.sendEmailVerification();
+          await firebase.auth().signOut();
+          alert('Registrazione completata! Controlla la tua email per verificare l\'account.');
+          if (toggleBtn) toggleBtn.click();
         } else {
           const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+          if (!userCredential.user.emailVerified) {
+            await firebase.auth().signOut();
+            alert("Accesso negato: devi prima verificare la tua email.");
+            return;
+          }
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('userEmail', userCredential.user.email);
           window.location.href = 'index.html';
         }
       } catch (error) {
-        alert('Errore: ' + error.message);
+        if (error.code === 'auth/email-already-in-use') alert("Questa email è già registrata.");
+        else if (error.code === 'auth/invalid-email') alert("Formato email non valido.");
+        else if (error.code === 'auth/weak-password') alert("La password deve avere almeno 6 caratteri.");
+        else alert('Errore: ' + error.message);
       }
     });
   }
@@ -92,7 +100,6 @@ function togglePassword(fieldId, btn) {
   }
 }
 
-// Accesso rapido con Google
 function googleLogin() {
   if (typeof firebase !== 'undefined' && firebase.auth) {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -103,7 +110,6 @@ function googleLogin() {
         window.location.href = 'index.html';
       })
       .catch((error) => {
-        console.error("Errore Google Login:", error);
         alert('Errore Google Login: ' + error.message);
       });
   }
