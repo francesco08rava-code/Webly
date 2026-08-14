@@ -15,6 +15,55 @@
   color: var(--bianco-panna);
 }
 
+.user-profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: var(--verde-scuro, #304F10);
+  color: var(--bianco-panna, #E6FFCC);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #ffffff;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(48, 79, 16, 0.15);
+  border-radius: 10px;
+  z-index: 1000;
+  border: 1px solid rgba(48, 79, 16, 0.1);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.dropdown-content button {
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--verde-scuro, #304F10);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.dropdown-content button:hover {
+  background-color: var(--bianco-panna, #E6FFCC);
+}
 
 /* ==========================================================================
    1. CONFIGURAZIONE E STILI BASE (DESKTOP / DEFAULT)
@@ -842,6 +891,20 @@ header {
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.input-grid-info{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 767px) {
+  .input-grid-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px; 
+  }
+}
+
 .form-step h3 {
   font-size: 1.8rem;
   color: var(--verde-scuro);
@@ -851,21 +914,21 @@ header {
   padding-bottom: 0.8rem;
 }
 
-.input-grid-info {
+.custom-select{
+  margin-bottom: 20px;
+}
+
+h4 {
+  margin-bottom: 0.5rem;
+}
+
+.input-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
 }
 
-@media (max-width: 789px) {
-  .input-grid-info {
-    grid-template-columns: auto;
-  }
-}
+@media (min-width: 1024px) {
   
-
-.radio-grid {
-  margin-bottom: 1.5rem;
 }
 
 .input-group {
@@ -912,6 +975,7 @@ header {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+  margin-bottom: 20px;
 }
 
 .radio-card {
