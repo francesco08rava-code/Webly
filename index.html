@@ -673,7 +673,23 @@
         </section>
         <script src="script.js"></script>
 <script>
-    window.addEventListener('load', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Inizializza Firebase ANCHE in index.html (dopo che i file defer sono caricati)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+            authDomain: "login-9bace.firebaseapp.com",
+            projectId: "login-9bace",
+            storageBucket: "login-9bace.firebasestorage.app",
+            messagingSenderId: "750647370002",
+            appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+            measurementId: "G-4CV1N6JHWY"
+        };
+
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // 2. Gestione UI Profilo e Logout
         const authContainer = document.getElementById('auth-container');
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const userEmail = localStorage.getItem('userEmail') || 'U';
@@ -706,11 +722,13 @@
 
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
+                    // Firebase ora è configurato correttamente su questa pagina
                     if (typeof firebase !== 'undefined' && firebase.auth) {
                         firebase.auth().signOut().then(() => {
                             localStorage.clear();
                             window.location.href = 'login.html';
-                        }).catch(() => {
+                        }).catch((error) => {
+                            console.error("Errore Logout:", error);
                             localStorage.clear();
                             window.location.href = 'login.html';
                         });
