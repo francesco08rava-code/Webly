@@ -688,6 +688,10 @@ header {
   grid-column: 1 / -1;
 }
 
+.extras-section{
+  padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+}
+
 .extras-section .sub-card {
   padding: 2.2rem;
   gap: 1rem;
@@ -723,6 +727,7 @@ header {
 }
 
 .terms-card-circle {
+  
   display: flex;
   flex-direction: column;
   align-items: center;
