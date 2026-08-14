@@ -8,10 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single:wght@100..900&family=Stack+Sans+Notch:wght@200..700&display=swap" rel="stylesheet">
-    
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script defer src="login.js"></script>
 </head>
 
 
@@ -62,6 +58,141 @@
       </button>
     </div>
   </div>
-  
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+    authDomain: "login-9bace.firebaseapp.com",
+    projectId: "login-9bace",
+    storageBucket: "login-9bace.firebasestorage.app",
+    messagingSenderId: "750647370002",
+    appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+    measurementId: "G-4CV1N6JHWY"
+  };
+
+  if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let isRegistering = false;
+
+    const toggleBtn = document.getElementById('toggle-mode');
+    const formTitle = document.getElementById('form-title');
+    const formSubtitle = document.getElementById('form-subtitle');
+    const submitBtn = document.getElementById('submit-btn');
+    const googleSection = document.getElementById('google-section');
+    const authForm = document.getElementById('auth-form');
+    const confirmGroup = document.getElementById('confirm-group');
+    const confirmPassword = document.getElementById('confirm-password');
+
+    // Grafica: Cambio tra Accesso e Registrazione
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        isRegistering = !isRegistering;
+        
+        if (isRegistering) {
+          if (formTitle) formTitle.textContent = 'Registrazione';
+          if (formSubtitle) formSubtitle.textContent = 'Crea il tuo nuovo account';
+          if (submitBtn) submitBtn.textContent = 'Registrati';
+          toggleBtn.textContent = 'Hai già un account? Accedi';
+          if (confirmGroup) confirmGroup.style.display = 'block';
+          if (confirmPassword) confirmPassword.setAttribute('required', 'true');
+          if (googleSection) googleSection.style.display = 'none';
+        } else {
+          if (formTitle) formTitle.textContent = 'Accesso';
+          if (formSubtitle) formSubtitle.textContent = 'Entra per gestire il tuo spazio';
+          if (submitBtn) submitBtn.textContent = 'Accedi';
+          toggleBtn.textContent = "Non hai un account? Registrati";
+          if (confirmGroup) confirmGroup.style.display = 'none';
+          if (confirmPassword) confirmPassword.removeAttribute('required');
+          if (googleSection) googleSection.style.display = 'block';
+        }
+      });
+    }
+
+    // Logica Form
+    if (authForm) {
+      authForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (isRegistering) {
+          // REGISTRAZIONE
+          const confirmVal = confirmPassword ? confirmPassword.value : '';
+          if (password !== confirmVal) {
+            alert('Le password non coincidono.');
+            return;
+          }
+          
+          firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCred) => {
+              userCred.user.sendEmailVerification();
+              firebase.auth().signOut();
+              alert('Registrazione completata! Controlla la tua email per verificare l\'account.');
+              if (toggleBtn) toggleBtn.click(); // Ritorna all'accesso
+            })
+            .catch((error) => {
+              if (error.code === 'auth/email-already-in-use') alert("Questa email è già registrata.");
+              else if (error.code === 'auth/invalid-email') alert("Formato email non valido.");
+              else if (error.code === 'auth/weak-password') alert("La password deve avere almeno 6 caratteri.");
+              else alert('Errore: ' + error.message);
+            });
+
+        } else {
+          // LOGIN
+          firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCred) => {
+              if (!userCred.user.emailVerified) {
+                firebase.auth().signOut();
+                alert("Accesso negato: devi prima verificare la tua email.");
+              } else {
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'index.html';
+              }
+            })
+            .catch(() => {
+              alert('Email o password errate.');
+            });
+        }
+      });
+    }
+  });
+
+  // Mostra/Nascondi Password
+  function togglePassword(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    if (!input || !btn) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = 'Nascondi';
+    } else {
+      input.type = 'password';
+      btn.textContent = 'Mostra';
+    }
+  }
+
+  // Google Login
+  function googleLogin() {
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then(() => {
+          localStorage.setItem('isLoggedIn', 'true');
+          window.location.href = 'index.html';
+        })
+        .catch((error) => {
+          alert('Errore Google Login: ' + error.message);
+        });
+    }
+  }
+</script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="login.js"></script>
+</body>
 </body>
 </html>
