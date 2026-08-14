@@ -675,7 +675,6 @@
        
         <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
         <script>
             const firebaseConfig = {
                 apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
@@ -709,7 +708,7 @@
                                     firebase.auth().signOut();
                                     if (errorDiv) {
                                         errorDiv.style.color = "green";
-                                        errorDiv.innerText = "Registrazione riuscita! Controlla la tua email per verificare l'account.";
+                                        errorDiv.innerText = "Registrazione riuscita! Controlla la tua email.";
                                         errorDiv.style.display = 'block';
                                     }
                                 });
@@ -718,7 +717,7 @@
                                 if (errorDiv) {
                                     errorDiv.style.color = "red";
                                     errorDiv.innerText = error.code === 'auth/email-already-in-use' 
-                                        ? "Questa email è già registrata." 
+                                        ? "Email già registrata." 
                                         : "Errore durante la registrazione.";
                                     errorDiv.style.display = 'block';
                                 }
@@ -726,7 +725,7 @@
                     });
                 }
 
-                // 2. LOGIN CON BLOCCO VERIFICA
+                // 2. LOGIN
                 const loginForm = document.getElementById('login-form');
                 if (loginForm) {
                     loginForm.addEventListener('submit', function(e) {
@@ -739,18 +738,16 @@
                         firebase.auth().signInWithEmailAndPassword(email, password)
                             .then((userCredential) => {
                                 const user = userCredential.user;
-                                return user.reload().then(() => {
-                                    if (!user.emailVerified) {
-                                        firebase.auth().signOut();
-                                        if (errorDiv) {
-                                            errorDiv.style.color = "red";
-                                            errorDiv.innerText = "Accesso negato: devi prima verificare la tua email.";
-                                            errorDiv.style.display = 'block';
-                                        }
-                                    } else {
-                                        window.location.href = 'index.html';
+                                if (!user.emailVerified) {
+                                    firebase.auth().signOut();
+                                    if (errorDiv) {
+                                        errorDiv.style.color = "red";
+                                        errorDiv.innerText = "Accesso negato: verifica la tua email.";
+                                        errorDiv.style.display = 'block';
                                     }
-                                });
+                                } else {
+                                    window.location.href = 'index.html';
+                                }
                             })
                             .catch((error) => {
                                 if (errorDiv) {
