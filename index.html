@@ -684,13 +684,14 @@
             measurementId: "G-4CV1N6JHWY"
         };
 
+        // Inizializza Firebase in sicurezza se non è già presente
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
 
         const authContainer = document.getElementById('auth-container');
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const userEmail = localStorage.getItem('userEmail') || 'U';
+        const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('regEmail') || 'U';
 
         if (isLoggedIn && authContainer) {
             const initial = userEmail.charAt(0).toUpperCase();
@@ -715,7 +716,9 @@
             }
 
             document.addEventListener('click', function() {
-                if (dropdownMenu) dropdownMenu.style.display = 'none';
+                if (dropdownMenu) {
+                    dropdownMenu.style.display = 'none';
+                }
             });
 
             if (logoutBtn) {
@@ -724,7 +727,8 @@
                         firebase.auth().signOut().then(() => {
                             localStorage.clear();
                             window.location.href = 'login.html';
-                        }).catch(() => {
+                        }).catch((error) => {
+                            console.error("Errore durante il logout:", error);
                             localStorage.clear();
                             window.location.href = 'login.html';
                         });
