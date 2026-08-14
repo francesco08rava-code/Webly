@@ -674,90 +674,94 @@
         <script src="script.js"></script>
        
         <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-<script>
-    // Configurazione Firebase (sostituisci con i tuoi dati)
-                const firebaseConfig = {
-                    apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
-                    authDomain: "login-9bace.firebaseapp.com",
-                    projectId: "login-9bace",
-                    storageBucket: "login-9bace.firebasestorage.app",
-                    messagingSenderId: "750647370002",
-                    appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
-                    measurementId: "G-4CV1N6JHWY"
-                };
-    firebase.initializeApp(firebaseConfig);
+        <script>
+            const firebaseConfig = {
+                apiKey: "AIzaSyC8XNpPwDLJXPyTJLbQr5vfpXdA27YARvw",
+                authDomain: "login-9bace.firebaseapp.com",
+                projectId: "login-9bace",
+                storageBucket: "login-9bace.firebasestorage.app",
+                messagingSenderId: "750647370002",
+                appId: "1:750647370002:web:340e7552852bf0e6d0d3cb",
+                measurementId: "G-4CV1N6JHWY"
+            };
 
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // 1. REGISTRAZIONE
-        const signupForm = document.getElementById('signup-form');
-        if (signupForm) {
-            signupForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const errorDiv = document.getElementById('error-msg');
-                if (errorDiv) errorDiv.style.display = 'none';
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
 
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        userCredential.user.sendEmailVerification().then(() => {
-                            firebase.auth().signOut(); // Blocca l'accesso immediato
-                            if (errorDiv) {
-                                errorDiv.style.color = "green";
-                                errorDiv.innerText = "Registrazione riuscita! Controlla la tua email per verificare l'account.";
-                                errorDiv.style.display = 'block';
-                            }
-                        });
-                    })
-                    .catch((error) => {
-                        if (errorDiv) {
-                            errorDiv.style.color = "red";
-                            errorDiv.innerText = error.code === 'auth/email-already-in-use' 
-                                ? "Questa email è già registrata." 
-                                : "Errore durante la registrazione.";
-                            errorDiv.style.display = 'block';
-                        }
+            document.addEventListener('DOMContentLoaded', function() {
+                
+                // 1. REGISTRAZIONE
+                const signupForm = document.getElementById('signup-form');
+                if (signupForm) {
+                    signupForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const email = document.getElementById('email').value;
+                        const password = document.getElementById('password').value;
+                        const errorDiv = document.getElementById('error-msg');
+                        if (errorDiv) errorDiv.style.display = 'none';
+
+                        firebase.auth().createUserWithEmailAndPassword(email, password)
+                            .then((userCredential) => {
+                                userCredential.user.sendEmailVerification().then(() => {
+                                    firebase.auth().signOut();
+                                    if (errorDiv) {
+                                        errorDiv.style.color = "green";
+                                        errorDiv.innerText = "Registrazione riuscita! Controlla la tua email per verificare l'account.";
+                                        errorDiv.style.display = 'block';
+                                    }
+                                });
+                            })
+                            .catch((error) => {
+                                if (errorDiv) {
+                                    errorDiv.style.color = "red";
+                                    errorDiv.innerText = error.code === 'auth/email-already-in-use' 
+                                        ? "Questa email è già registrata." 
+                                        : "Errore durante la registrazione.";
+                                    errorDiv.style.display = 'block';
+                                }
+                            });
                     });
-            });
-        }
+                }
 
-        // 2. LOGIN CON BLOCCO VERIFICA
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                const errorDiv = document.getElementById('login-error-msg');
-                if (errorDiv) errorDiv.style.display = 'none';
+                // 2. LOGIN CON BLOCCO VERIFICA
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const email = document.getElementById('login-email').value;
+                        const password = document.getElementById('login-password').value;
+                        const errorDiv = document.getElementById('login-error-msg');
+                        if (errorDiv) errorDiv.style.display = 'none';
 
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        if (!user.emailVerified) {
-                            firebase.auth().signOut(); // Respinge l'utente se l'email non è verificata
-                            if (errorDiv) {
-                                errorDiv.style.color = "red";
-                                errorDiv.innerText = "Accesso negato: devi prima verificare la tua email.";
-                                errorDiv.style.display = 'block';
-                            }
-                        } else {
-                            window.location.href = 'index.html'; // Accesso consentito
-                        }
-                    })
-                    .catch((error) => {
-                        if (errorDiv) {
-                            errorDiv.style.color = "red";
-                            errorDiv.innerText = "Email o password errate.";
-                            errorDiv.style.display = 'block';
-                        }
+                        firebase.auth().signInWithEmailAndPassword(email, password)
+                            .then((userCredential) => {
+                                const user = userCredential.user;
+                                return user.reload().then(() => {
+                                    if (!user.emailVerified) {
+                                        firebase.auth().signOut();
+                                        if (errorDiv) {
+                                            errorDiv.style.color = "red";
+                                            errorDiv.innerText = "Accesso negato: devi prima verificare la tua email.";
+                                            errorDiv.style.display = 'block';
+                                        }
+                                    } else {
+                                        window.location.href = 'index.html';
+                                    }
+                                });
+                            })
+                            .catch((error) => {
+                                if (errorDiv) {
+                                    errorDiv.style.color = "red";
+                                    errorDiv.innerText = "Email o password errate.";
+                                    errorDiv.style.display = 'block';
+                                }
+                            });
                     });
+                }
             });
-        }
-    });
-</script>
+        </script>
     </body>
 </html>
